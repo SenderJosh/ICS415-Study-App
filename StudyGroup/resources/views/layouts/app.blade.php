@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 	</head>
 	<body>
-		<div class="ui inverted segment">
+		<div class="ui inverted segment" style="border-radius: 0px !important;">
 			<div class="ui inverted secondary pointing menu">
 				<div class="ui container">
 					<a class="header item" href="{{ url('/') }}"><i class="book icon"></i>Study Group App</a>
@@ -33,6 +33,18 @@
 				</div>
 			</div>
 		</div>
+		@if ($queried == 1)
+		<div class="ui vertical inverted left visible sidebar menu">
+			<a class="item">
+				<i class="home icon"></i>
+				Home
+			</a>
+			<a class="item">
+				<i class="block layout icon"></i>
+				Topics
+			</a>
+		</div>
+		@endif
 		@yield('content')
 	</body>
 </html>
