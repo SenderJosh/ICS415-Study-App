@@ -34,7 +34,8 @@
 			</div>
 		</div>
 		@if ($queried == 1)
-		<div class="ui vertical inverted left visible sidebar menu">
+		<div>
+			<div class="ui vertical inverted left visible sidebar menu overlay">
 			<a class="item">
 				<i class="home icon"></i>
 				Home
@@ -43,6 +44,7 @@
 				<i class="block layout icon"></i>
 				Topics
 			</a>
+		</div>
 		</div>
 		@endif
 		@yield('content')

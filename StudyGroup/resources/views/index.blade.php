@@ -64,12 +64,7 @@
 			}
 		</script>
 	@else
-		
-		<script>
-			$(document).ready(function() {
-				$('.ui.labeled.icon.sidebar').sidebar('toggle');
-			});
-		</script>
+		asdf
 	@endif
 </div>
 
