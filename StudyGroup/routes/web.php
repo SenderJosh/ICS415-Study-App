@@ -16,3 +16,6 @@ Route::get('/', 'WebController@queryGroups');
 Route::get('/mygroups', function() {
 	return view('index');
 });
+
+Route::get('/callback', 'Auth\LoginController@redirectToProvider');
+Route::get('/', 'Auth\LoginController@redirectToProvider');
