@@ -15,7 +15,7 @@ class WebController extends Controller
 	function queryGroups(Request $request) 
 	{
 		//If null, means we messed up or fake request. Just go back to normal view
-		if($request['class-name'] == 'NULL')
+		if(!isset($request['class-name']))
 		{
 			return view('index', ['queried' => 0]);
 		}

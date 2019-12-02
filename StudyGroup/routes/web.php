@@ -17,5 +17,5 @@ Route::get('/mygroups', function() {
 	return view('index');
 });
 
-Route::get('/callback', 'Auth\LoginController@redirectToProvider');
-Route::get('/', 'Auth\LoginController@redirectToProvider');
+Route::get('/login', 'Auth\LoginController@redirectToProvider');
+Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
