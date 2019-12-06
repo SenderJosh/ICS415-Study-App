@@ -1,6 +1,19 @@
 @extends('layouts/app')
 
 @section('content')
+<!-- Sidebar -->
+@if ($queried == 1)
+<div>
+	<div class="ui vertical inverted left visible sidebar menu overlay">
+		@foreach($groups as $group)
+		<a class="item">
+			{{$group->ClassName}}
+		</a>
+		@endforeach
+	</div>
+</div>
+@endif
+
 <!-- Find Group page -->
 <div class="ui container" style="margin-top: 50px;">
 	@if ($queried == 0)

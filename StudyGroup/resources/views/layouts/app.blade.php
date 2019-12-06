@@ -25,28 +25,13 @@
 						<a class="item" href="{{ url('/mygroups') }}">My Groups</a>
 					@endif
 					@if (Auth::check())
-						<i class="user icon"></i>
-						<a class="right item" href="{{ url('/profile') }}">Welcome Back!</a>
+						<a class="right item" href="{{ url('/profile') }}"><i class="user icon"></i> Welcome Back, {{ explode(' ', Auth::user()->name)[0] }}!</a>
 					@else
 						<a class="right item" href="{{ url('/login') }}">Login</a>
 					@endif
 				</div>
 			</div>
 		</div>
-		@if ($queried == 1)
-		<div>
-			<div class="ui vertical inverted left visible sidebar menu overlay">
-			<a class="item">
-				<i class="home icon"></i>
-				Home
-			</a>
-			<a class="item">
-				<i class="block layout icon"></i>
-				Topics
-			</a>
-		</div>
-		</div>
-		@endif
 		@yield('content')
 	</body>
 </html>
