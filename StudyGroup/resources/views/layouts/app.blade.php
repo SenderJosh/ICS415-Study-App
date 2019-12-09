@@ -19,7 +19,11 @@
 						<a class="item" href="{{ url('/mygroups') }}">My Groups</a>
 					@elseif (Request::is('mygroups'))
 						<a class="item" href="{{ url('/') }}">Find Group</a>
-						<a class="active item" href="{{ url('/mygroups') }}">My Groups</a>
+						@if (Auth::check())
+							<a class="active item" href="{{ url('/mygroups') }}">My Groups</a>
+						@else
+							<a class="active item" href="{{ url('/login') }}">My Groups</a>
+						@endif
 					@else
 						<a class="item" href="{{ url('/') }}">Find Group</a>
 						<a class="item" href="{{ url('/mygroups') }}">My Groups</a>
