@@ -17,7 +17,7 @@
 					@if (Request::is('/'))
 						<a class="active item" href="{{ url('/') }}">Find Group</a>
 						<a class="item" href="{{ url('/mygroups') }}">My Groups</a>
-					@elseif (Request::is('mygroups'))
+					@elseif (Request::is('mygroups') || Request::is('creategroup'))
 						<a class="item" href="{{ url('/') }}">Find Group</a>
 						@if (Auth::check())
 							<a class="active item" href="{{ url('/mygroups') }}">My Groups</a>

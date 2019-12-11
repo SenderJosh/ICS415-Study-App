@@ -4,31 +4,52 @@
 
 <div class="ui container">
 	<form class="ui form">
-		<div class="field">
-			<label>Title</label>
-			<input id="title" type="text" name="title" placeholder="ICS 415" onkeyup="checkIfEmpty()" />
+		<div class="ui grid">
+			<div class="row">
+				<div class="eight wide column">
+					<div class="field">
+						<label>Study Group Title</label>
+						<input id="title" type="text" name="title" placeholder="ICS 415 Study Group" onkeyup="checkIfEmpty()" maxlength="75" />
+					</div>
+				</div>
+				<div class="eight wide column">
+					<div class="field">
+						<label>Course Name/Number</label>
+						<input id="title" type="text" name="class-name" placeholder="ICS 415" onkeyup="checkIfEmpty()" maxlength="75" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sixteen wide column">
+					<div class="field">
+						<label>Description (markdown)</label>
+						<textarea onkeyup="checkIfEmpty()" name="description" id="md" placeholder="# Title&#10;&#10;## What You'll Cover&#10;&#10;Times Meeting" maxlength="4000"></textarea>
+						<button style="margin-top:5px;" id="prevButton" class="ui button" onclick="run()">Preview</button>
+						<div id="target"></div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sixteen wide column">
+					<div class="field">
+						<label>Days Meeting</label>
+						<select id="day_meeting" name="days[]" multiple="" class="label ui selection fluid dropdown" onchange="checkIfEmpty()">
+							<option value="">Pick days you will be meeting</option>
+							<option value="Monday">Monday</option>
+							<option value="Tuesday">Tuesday</option>
+							<option value="Wednesday">Wednesday</option>
+							<option value="Thursday">Thursday</option>
+							<option value="Friday">Friday</option>
+							<option value="Saturday">Saturday</option>
+							<option value="Sunday">Sunday</option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<div>
+				<button id="submit" class="ui blue basic button" disabled>Create Group</button>
+			</div>
 		</div>
-		<div class="field">
-			<label>Description (markdown)</label>
-			<textarea onkeyup="checkIfEmpty()" name="description" id="md" placeholder="# Title&#10;&#10;## What You'll Cover&#10;&#10;Times Meeting"></textarea>
-			<button style="margin-top:5px;" id="prevButton" class="ui button" onclick="run()">Preview</button>
-			<div id="target"></div>
-		</div>
-		<div class="field">
-			<label>Days Meeting</label>
-			<select id="day_meeting" name="days[]" multiple="" class="label ui selection fluid dropdown" onchange="checkIfEmpty()">
-				<option value="">Pick days you will be meeting</option>
-				<option value="Monday">Monday</option>
-				<option value="Tuesday">Tuesday</option>
-				<option value="Wednesday">Wednesday</option>
-				<option value="Thursday">Thursday</option>
-				<option value="Friday">Friday</option>
-				<option value="Saturday">Saturday</option>
-				<option value="Sunday">Sunday</option>
-			</select>
-		</div>
-
-		<button id="submit" class="ui blue basic button" disabled>Create Group</button>
 	</form>
 </div>
 

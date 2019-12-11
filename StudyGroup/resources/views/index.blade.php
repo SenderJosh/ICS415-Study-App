@@ -1,19 +1,6 @@
 @extends('layouts/app')
 
 @section('content')
-<!-- Sidebar -->
-@if ($queried == 1)
-<div>
-	<div class="ui vertical inverted left visible sidebar menu overlay">
-		@foreach($groups as $group)
-		<a class="item">
-			{{$group->ClassName}}
-		</a>
-		@endforeach
-	</div>
-</div>
-@endif
-
 <!-- Find Group page -->
 <div class="ui container" style="margin-top: 50px;">
 	@if ($queried == 0)
@@ -76,9 +63,84 @@
 				}
 			}
 		</script>
-	@else
-		asdf
 	@endif
 </div>
+<!-- Sidebar -->
+@if ($queried == 1)
+@if (count($groups) > 0)
+<div class="ui grid" style="overflow-y:auto;white-space:nowrap;max-height:auto;">
+	<div class="four wide column">
+		<div class="ui fluid vertical tabular menu">
+			@foreach($groups as $group)
+				<a class="item group" data-tab="{{$group->GroupDescription}}">
+					<div class="groupItem title">
+						{{$group->GroupName}}
+					</div>
+					<div style="text-align:center;">
+						<div class="groupItem class" style="display: inline-block;">
+							{{$group->ClassName}}
+						</div>
+						<div class="groupItem days" style="display: inline-block;">
+							@if ($group->Monday)
+							M
+							@endif
+							@if ($group->Tuesday)
+							T
+							@endif
+							@if ($group->Wednesday)
+							W
+							@endif
+							@if ($group->Thursday)
+							R
+							@endif
+							@if ($group->Friday)
+							F
+							@endif
+							@if ($group->Saturday)
+							[SAT]
+							@endif
+							@if ($group->Sunday)
+							[SUN]
+							@endif
+						</div>
+					</div>
+				</a>
+			@endforeach
+		</div>
+	</div>
+	<div id="contentPost" class="stretched twelve wide column" style="display: none; visibility:hidden;">
+		<div id="groupPost" class="ui bottom attached segment active tab"></div>
+		<div>
+			<button class="ui inverted blue button">Request to Join</button>
+		</div>
+	</div>
+</div>
+
+<script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
+<script>
+	$('.item.group').click(function() {
+		$('#contentPost').attr('style', '');
+
+		let text = $(this).data('tab');
+		if(!$(this).hasClass('active')) {
+			$('.item.active').removeClass('active');
+			$(this).addClass('active');
+		}
+		if(text) {
+			let	target = $('#groupPost'),
+			converter = new showdown.Converter(),
+			html = converter.makeHtml(text);
+			target.html(html);
+		}
+	});
+</script>
+@else
+<!-- No groups -->
+<div class="ui container" style="text-align: center;">
+	<h1>There are no groups with your filters</h1>
+	<h3>Click <a href="{{ url('/') }}">here</a> to go back</h3>
+</div>
+@endif
+@endif
 
 @endsection

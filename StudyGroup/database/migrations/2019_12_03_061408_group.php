@@ -17,6 +17,7 @@ class Group extends Migration
             $table->bigIncrements('GroupID');
 			$table->bigInteger('GroupUserID');
 			$table->bigInteger('GroupPostID');
+			$table->boolean('Accepted');
 			$table->timestamps();
         });
     }

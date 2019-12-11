@@ -12,14 +12,11 @@
 */
 
 Route::get('/', 'WebController@queryGroups');
+Route::get('/creategroup', 'WebController@createGroup');
 
 Route::get('/mygroups', function() {
-	return view('index');
+	return redirect('/');
 });
 
 Route::get('/login', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');
-
-Route::get('/creategroup', function() {
-	return view('creategroup');
-});
