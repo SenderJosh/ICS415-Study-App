@@ -117,6 +117,7 @@
 </div>
 
 <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
+
 <script>
 	$('.item.group').click(function() {
 		$('#contentPost').attr('style', '');

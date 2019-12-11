@@ -72,7 +72,7 @@ class WebController extends Controller
 		//Check if auth. If not, go to index
 		if(!Auth::user())
 		{
-			return view('index', ['queried' => 0]);
+			return redirect('/');
 		}
 
 

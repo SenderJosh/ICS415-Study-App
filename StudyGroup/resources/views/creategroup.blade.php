@@ -15,7 +15,7 @@
 				<div class="eight wide column">
 					<div class="field">
 						<label>Course Name/Number</label>
-						<input id="title" type="text" name="class-name" placeholder="ICS 415" onkeyup="checkIfEmpty()" maxlength="75" />
+						<input id="classname" type="text" name="class-name" placeholder="ICS 415" onkeyup="checkIfEmpty()" maxlength="75" />
 					</div>
 				</div>
 			</div>
@@ -74,7 +74,7 @@
 			
 	function checkIfEmpty() {
 		//If greater than 0 and not just whitespace, enable submit button
-		if ($('#title').val().trim().length > 0 && $('#md').val().trim().length > 0 && $('#day_meeting').val().length > 0) {
+		if ($('#title').val().trim().length > 0 && $('#classname').val().trim().length > 0 && $('#md').val().trim().length > 0 && $('#day_meeting').val().length > 0) {
 			$('#submit').removeAttr('disabled');
 		} else {
 			//Otherwise, disable
