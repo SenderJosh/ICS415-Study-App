@@ -1,2 +1,7 @@
 # ICS415-Study-App
-For ICS 415
+
+# Setup
+- Clone the project
+- Run ```composer install``` within project directory
+- Run php artisan serve to run app on localhost
+- Run or copy dbscript.sql in a query window on SQL Server 17
