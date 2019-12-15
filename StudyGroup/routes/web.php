@@ -12,11 +12,14 @@
 */
 
 Route::get('/', 'WebController@queryGroups');
+Route::post('/requestjoin', 'WebController@requestJoin');
+Route::post('/removerequestjoin', 'WebController@removeRequestJoin');
+
 Route::get('/creategroup', 'WebController@createGroup');
 
-Route::get('/mygroups', function() {
-	return redirect('/');
-});
+Route::get('/mygroups', 'WebController@myGroups');
+Route::post('/mygroups/delete', 'WebController@deleteGroup');
+Route::post('/mygroups/leave', 'WebController@leaveGroup');
 
 Route::get('/login', 'Auth\LoginController@redirectToProvider');
 Route::get('/callback', 'Auth\LoginController@handleProviderCallback');

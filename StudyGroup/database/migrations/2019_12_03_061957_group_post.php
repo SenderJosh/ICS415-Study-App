@@ -28,6 +28,7 @@ class GroupPost extends Migration
 			$table->boolean('Friday');
 			$table->boolean('Saturday');
 			$table->boolean('Sunday');
+			$table->boolean('Deleted')->default(0);
             $table->timestamps();
         });
     }

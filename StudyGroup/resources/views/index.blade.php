@@ -72,7 +72,7 @@
 	<div class="four wide column">
 		<div class="ui fluid vertical tabular menu">
 			@foreach($groups as $group)
-				<a class="item group" data-tab="{{$group->GroupDescription}}">
+				<a class="item group" data-tab="{{$group->GroupDescription}}" data-postid="{{$group->GroupPostID}}" data-applied="{{$group->Applied}}">
 					<div class="groupItem title">
 						{{$group->GroupName}}
 					</div>
@@ -110,19 +110,25 @@
 	</div>
 	<div id="contentPost" class="stretched twelve wide column" style="display: none; visibility:hidden;">
 		<div id="groupPost" class="ui bottom attached segment active tab"></div>
-		<div>
-			<button class="ui inverted blue button">Request to Join</button>
-		</div>
 	</div>
 </div>
 
 <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
 
 <script>
+	$.ajaxSetup({
+		headers: {
+			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		}
+	});
+
 	$('.item.group').click(function() {
 		$('#contentPost').attr('style', '');
 
 		let text = $(this).data('tab');
+		let postid = $(this).data('postid');
+		let applied = $(this).data('applied');
+
 		if(!$(this).hasClass('active')) {
 			$('.item.active').removeClass('active');
 			$(this).addClass('active');
@@ -132,7 +138,43 @@
 			converter = new showdown.Converter(),
 			html = converter.makeHtml(text);
 			target.html(html);
+			if(applied == 1) {
+				$('#contentPost').append('<div id="genBtn">'+
+									'<button class="ui inverted red button removerequestbutton" data-joinid="' + postid + '">Retract Request to Join</button>'+
+								'</div>');
+			} else {
+				$('#contentPost').append('<div id="genBtn">'+
+									'<button class="ui inverted blue button requestbutton" data-joinid="' + postid + '">Request to Join</button>'+
+								'</div>');
+			}
 		}
+	});
+
+	//Perform AJAX to either delete the group or leave the group the user is part of
+	$(document).on('click', '.requestbutton', function() {
+		let postid = $(this).data('joinid');
+		$.ajax({
+			type:'POST',
+			url:'/requestjoin',
+			data:{postid:postid},
+			success:function(data){
+				//Change button to be the "remove request join" button
+				$('#genBtn').html('<button class="ui inverted red button removerequestbutton" data-joinid="' + postid + '">Retract Request to Join</button>');
+			}
+		});
+	});
+
+	$(document).on('click', '.removerequestbutton', function() {
+		let postid = $(this).data('joinid');
+		$.ajax({
+			type:'POST',
+			url:'/removerequestjoin',
+			data:{postid:postid},
+			success:function(data){
+				//Change button to be the "request join" button
+				$('#genBtn').html('<button class="ui inverted blue button removerequestbutton" data-joinid="' + postid + '">Request to Join</button>');
+			}
+		});
 	});
 </script>
 @else

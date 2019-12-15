@@ -18,3 +18,8 @@ body {
 .groupItem.class {
 	font-size: medium;
 }
+
+.groupItem.create {
+	text-align: center;
+	font-size: xx-large;
+}

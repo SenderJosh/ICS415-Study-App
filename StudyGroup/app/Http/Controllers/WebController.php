@@ -67,6 +67,19 @@ class WebController extends Controller
 		}
 	}
 
+	function myGroups(Request $request)
+	{
+		if(!Auth::user())
+		{
+			return redirect('/');
+		}
+
+		//Get all groups this user is part of, and all the groups the user owns
+		$groups = DB::select('exec StudyApp_GetMyGroups ?', array(Auth::user()->id));
+
+		return view('mygroups', ['groups' => $groups]);
+	}
+
 	function createGroup(Request $request)
 	{
 		//Check if auth. If not, go to index
@@ -105,8 +118,56 @@ class WebController extends Controller
 			$newGroup->Accepted = 1;
 			$newGroup->save();
 			//temp, TODO: Return mygroups page
-			return redirect('/');
+			return redirect('/mygroups');
 		}
+	}
+
+	function deleteGroup(Request $request) 
+	{
+		if(Auth::user()) 
+		{
+			//Only delete the group if the user is an authenticated user that actually owns the post
+			$group = GroupPost::where('GroupPostID', $request['postid'])->where('GroupOwnerID', Auth::user()->id)->update(['Deleted' => 1]);
+			return 1;
+		}
+		return 0;
+	}
+
+	function leaveGroup(Request $request) 
+	{
+		if(Auth::user()) 
+		{
+			//Only leave the group if the user is an authenticated user that actually is part of the group
+			$group = Group::where('GroupPostID', $request['postid'])->where('GroupUserID', Auth::user()->id)->where('Accepted', 1)->update(['Deleted' => 1]);
+			return 1;
+		}
+		return 0;
+	}
+
+	function removeRequestJoin(Request $request)
+	{
+		if(!Auth::user())
+		{
+			redirect('/login');
+		}
+
+		//Soft delete the request
+		Group::where('GroupPostID', $request['postid'])->where('GroupUserID', Auth::user()->id)->where('Accepted', 0)->update(['Deleted' => 1]);
+	}
+
+	function requestJoin(Request $request)
+	{
+		if(!Auth::user())
+		{
+			redirect('/login');
+		}
+
+		//Insert the request
+		$newGroup = new Group;
+		$newGroup->GroupUserID = Auth::user()->id;
+		$newGroup->GroupPostID = $request['postid'];
+		$newGroup->Accepted = 0;
+		$newGroup->save();
 	}
 
 }
