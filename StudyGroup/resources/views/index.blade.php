@@ -1,6 +1,13 @@
 @extends('layouts/app')
 
 @section('content')
+<!-- Variable to disable or enable 'request to join' button based on if the user is logged in -->
+@if (Auth::user())
+<script>const auth = 1;</script>
+@else
+<script>const auth = 0;</script>
+@endif
+
 <!-- Find Group page -->
 <div class="ui container" style="margin-top: 50px;">
 	@if ($queried == 0)
@@ -134,6 +141,9 @@
 			$(this).addClass('active');
 		}
 		if(text) {
+			//REmove dynamically generated html button
+			$('#genBtn').remove();
+
 			let	target = $('#groupPost'),
 			converter = new showdown.Converter(),
 			html = converter.makeHtml(text);
@@ -144,7 +154,7 @@
 								'</div>');
 			} else {
 				$('#contentPost').append('<div id="genBtn">'+
-									'<button class="ui inverted blue button requestbutton" data-joinid="' + postid + '">Request to Join</button>'+
+									'<button class="ui inverted blue button requestbutton" data-joinid="' + postid + '" ' + ((auth == 1) ? '' : 'disabled') + ' >Request to Join</button>'+
 								'</div>');
 			}
 		}

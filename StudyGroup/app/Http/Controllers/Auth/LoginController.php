@@ -40,11 +40,13 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
 	}
 	
+	//Check provider 'google' for driver
 	public function redirectToProvider()
 	{
 		return Socialite::driver('google')->redirect();
 	}
 
+	//Manage tokenized provider callback to get user and determine if new or old
 	public function handleProviderCallback()
 	{
 		try {
@@ -53,9 +55,12 @@ class LoginController extends Controller
             return redirect('/login');
         }
         // only allow people with @hawaii.edu to login
-        if(explode("@", $user->email)[1] !== 'hawaii.edu'){
+		/*
+		if(explode("@", $user->email)[1] !== 'hawaii.edu'){
             return redirect()->to('/');
-        }
+		}
+		*/
+
         // check if they're an existing user
 		//Modify by using DB
 		$existingUser = User::where('email', $user->email)->first();
@@ -73,5 +78,17 @@ class LoginController extends Controller
             auth()->login($authUser, true);
         }
         return redirect()->to('/');
+	}
+
+	//Logout directive; redirect to home page when done
+	public function logoutSession()
+	{
+		try {
+			$user = Socialite::driver('google')->user();
+			auth()->logout($user, true);
+			return redirect('/');
+        } catch (\Exception $e) {
+            return redirect('/login');
+        }
 	}
 }

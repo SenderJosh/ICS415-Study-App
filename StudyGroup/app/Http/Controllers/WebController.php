@@ -10,7 +10,11 @@ use DB;
 
 class WebController extends Controller
 {
+
+	////////////////////////////////////////// INDEX PAGE //////////////////////////////////////////
+
 	/*
+	Handles the querying of groups. Authentication not necessary, but will therefore only be 'views' and won't have ability to apply
 	Fields:
 		class-name
 		topics
@@ -67,11 +71,42 @@ class WebController extends Controller
 		}
 	}
 
+	//API endpoint for removing a request to join a group from the queried index page
+	function removeRequestJoin(Request $request)
+	{
+		if(!Auth::user())
+		{
+			redirect('/login');
+		}
+
+		//Soft delete the request
+		Group::where('GroupPostID', $request['postid'])->where('GroupUserID', Auth::user()->id)->where('Accepted', 0)->update(['Deleted' => 1]);
+	}
+
+	//API endpoint for adding a request to join a group from the queried index page
+	function requestJoin(Request $request)
+	{
+		if(!Auth::user())
+		{
+			redirect('/login');
+		}
+
+		//Insert the request
+		$newGroup = new Group;
+		$newGroup->GroupUserID = Auth::user()->id;
+		$newGroup->GroupPostID = $request['postid'];
+		$newGroup->Accepted = 0;
+		$newGroup->save();
+	}
+
+	////////////////////////////////////////// MYGROUPS AND CREATING GROUPS RELATED //////////////////////////////////////////
+	
+	//Display the user's groups. If they aren't logged in, redirect to login
 	function myGroups(Request $request)
 	{
 		if(!Auth::user())
 		{
-			return redirect('/');
+			return redirect('/login');
 		}
 
 		//Get all groups this user is part of, and all the groups the user owns
@@ -80,12 +115,13 @@ class WebController extends Controller
 		return view('mygroups', ['groups' => $groups]);
 	}
 
+	//Display fthe form to create a group. If they aren't logged in, redirect to login
 	function createGroup(Request $request)
 	{
 		//Check if auth. If not, go to index
 		if(!Auth::user())
 		{
-			return redirect('/');
+			return redirect('/login');
 		}
 
 
@@ -122,6 +158,7 @@ class WebController extends Controller
 		}
 	}
 
+	//API endpoint for deleting a group from the myGroup view. Only allow this if they are authorized to do so
 	function deleteGroup(Request $request) 
 	{
 		if(Auth::user()) 
@@ -133,6 +170,7 @@ class WebController extends Controller
 		return 0;
 	}
 
+	//API endpoint for leaving a group from the myGroup view. Only allow this if they are authorized to do so
 	function leaveGroup(Request $request) 
 	{
 		if(Auth::user()) 
@@ -144,30 +182,37 @@ class WebController extends Controller
 		return 0;
 	}
 
-	function removeRequestJoin(Request $request)
+	//API endpoint for getting all the users who are part of a group post from the myGroup view. Only allow this if they are authenticated
+	function getUsersFromGroup(Request $request)
 	{
-		if(!Auth::user())
+		if(Auth::user())
 		{
-			redirect('/login');
+			$users = DB::select('exec StudyApp_GetUsersFromGroup ?,?', array($request['postid'], Auth::user()->id));
+			return json_encode($users);
 		}
-
-		//Soft delete the request
-		Group::where('GroupPostID', $request['postid'])->where('GroupUserID', Auth::user()->id)->where('Accepted', 0)->update(['Deleted' => 1]);
+		return 0;
 	}
 
-	function requestJoin(Request $request)
+	//API endpoint for removing a user from a group from the myGroup view. Only allows it if hte user is authenticated to do so
+	function removeUserFromGroup(Request $request)
 	{
-		if(!Auth::user())
+		if(Auth::user())
 		{
-			redirect('/login');
+			DB::update('exec StudyApp_RemoveUserFromGroup ?,?,?', array(Auth::user()->id, $request['uid'], $request['postid']));
+			return 1;
 		}
+		return 0;
+	}
 
-		//Insert the request
-		$newGroup = new Group;
-		$newGroup->GroupUserID = Auth::user()->id;
-		$newGroup->GroupPostID = $request['postid'];
-		$newGroup->Accepted = 0;
-		$newGroup->save();
+	//API endpoint for accepting a user into a group from the myGroup view. Only allows it if hte user is authenticated to do so
+	function acceptUserIntoGroup(Request $request)
+	{
+		if(Auth::user())
+		{
+			DB::update('exec StudyApp_AcceptRequestToJoinUserFromGroup ?,?,?', array(Auth::user()->id, $request['uid'], $request['postid']));
+			return 1;
+		}
+		return 0;
 	}
 
 }

@@ -76,15 +76,49 @@
 			$(this).addClass('active');
 		}
 		if(text) {
+			//Remove any dynamically generated HTML from AJAX/form changes
 			$('#genBtn').remove();
+			$('#genUsers').remove();
+
 			let	target = $('#groupPost'),
 			converter = new showdown.Converter(),
 			html = converter.makeHtml(text);
 			target.html(html);
+
 			if(ownership == 1) {
-				$('#contentPost').append('<div id="genBtn">'+
+				//Query for the postid, get all users part of group
+				$.ajax({
+					type:'GET',
+					url:'/mygroups/users',
+					data:{postid:postid},
+					success:function(data){
+						data = JSON.parse(data);
+						//If return is not 0, it means we got data returned
+						if(data != 0) {
+							//If greater than 0, we have actual people in the group (nonempty)
+							if(data.length > 0) {
+								let userHtml = '<div id="genUsers"><table class="ui celled padded table"><tr><th>Name</th><th>Email</th><th>Status</th></tr>';
+								for (let index = 0; index < data.length; index++) {
+									const element = data[index];
+									let id = element['id'];
+									let name = element['name'];
+									let email = element['email'];
+									let accepted = element['Accepted'];
+
+									//Add data for the person and whether or not the owner has the ability to accept their request to join, or to remove from the group
+									//Dependent on 'accepted' indicator, display a different button (use ternary)
+									userHtml += '<tr><td>' + name + '</td><td>' + email + '</td><td>' + ((accepted == 1) ? '<button data-postid="' + postid + '" data-uid="' + id + '" class="ui inverted red button removePerson">Remove From Group</button>' : '<button data-postid="' + postid + '" data-uid="' + id + '" class="ui inverted green button addPerson">Accept Request to Join</button>') +'</td></tr>';
+								}
+
+								userHtml += '</table></div>';
+								$('#contentPost').append(userHtml);
+							}
+						}
+						$('#contentPost').append('<div id="genBtn">'+
 									'<button class="ui inverted red button deletebutton" data-deleteid="' + postid + '">Delete Group</button>'+
 								'</div>');
+					}
+				});
 			} else {
 				$('#contentPost').append('<div id="genBtn">'+
 									'<button class="ui inverted red button leavebutton" data-leaveid="' + postid + '">Leave Group</button>'+
@@ -123,6 +157,42 @@
 			}
 		});
 	});
+
+	//Perform AJAX to either remove the person from the group (as the owner), or accept the person into the group (as the owner)
+	$(document).on('click', '.removePerson', function() {
+		let postid = $(this).data('postid');
+		//UID to remove from the group
+		let uid = $(this).data('uid');
+
+		$.ajax({
+			type:'POST',
+			url:'/mygroups/removeuserfromgroup',
+			data:{postid:postid, uid:uid}
+		});
+
+		//Remove row from the list of people in the group
+		//The HTML parent for the button clicked is a <td>, so need <tr> (parent's parent)
+		$(this).closest('tr').remove();
+	});
+
+	$(document).on('click', '.addPerson', function() {
+		let postid = $(this).data('postid');
+		//UID to remove from the group
+		let uid = $(this).data('uid');
+		$.ajax({
+			type:'POST',
+			url:'/mygroups/acceptuserintogroup',
+			data:{postid:postid, uid:uid}
+		});
+		//Remove row from the list of people in the group
+		//The HTML parent for the button clicked is a <td>, so need <tr> (parent's parent)
+		$(this).removeClass();
+		$(this).addClass('ui inverted red button removePerson');
+		$(this).text('Remove From Group');
+	});
+
+	
+
 </script>
 
 @endsection
