@@ -59,12 +59,14 @@
 <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
 
 <script>
+	//AJAX setup, add csrf token to header
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
 
+	//When a gropu is clicked, display the content and get the users who are part of the group if they own it
 	$('.item.group').click(function() {
 		$('#contentPost').attr('style', '');
 

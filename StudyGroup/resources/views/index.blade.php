@@ -123,12 +123,14 @@
 <script src="https://cdn.rawgit.com/showdownjs/showdown/1.9.0/dist/showdown.min.js"></script>
 
 <script>
+	//AJAX setup, add csrf token to header
 	$.ajaxSetup({
 		headers: {
 			'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		}
 	});
 
+	//For any group clicked, display its content and request to join button
 	$('.item.group').click(function() {
 		$('#contentPost').attr('style', '');
 
@@ -148,6 +150,8 @@
 			converter = new showdown.Converter(),
 			html = converter.makeHtml(text);
 			target.html(html);
+
+			//Display a different button based on whether or not they've already applied to the group
 			if(applied == 1) {
 				$('#contentPost').append('<div id="genBtn">'+
 									'<button class="ui inverted red button removerequestbutton" data-joinid="' + postid + '">Retract Request to Join</button>'+
